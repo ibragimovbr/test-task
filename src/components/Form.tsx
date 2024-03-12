@@ -29,7 +29,7 @@ const countriesData = [
 
 const universityTypes = ["Технический", "Гуманитарный"];
 
-export function FormComponent() {
+export function Form() {
   const formData = useUnit($formData);
   const handleSubmit = () => {
     submitForm();
