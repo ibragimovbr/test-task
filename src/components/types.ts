@@ -3,11 +3,5 @@ export interface FormData {
   city: string;
   universityType: string;
   accommodationType: string;
-}
-
-export interface SelectProps {
-  value: string;
-  options: string[];
-  onChange: (value: string) => void;
-  disabled?: boolean;
+  faculty: string;
 }

@@ -1,40 +1,42 @@
 import { createStore, createEvent } from "effector";
-import type { FormData } from "./types";
+import { type FormData } from "./types";
 
 const initialFormData: FormData = {
   country: "",
   city: "",
   universityType: "",
   accommodationType: "",
+  faculty: "",
 };
 
-export const countryChanged = createEvent<string>();
-export const cityChanged = createEvent<string>();
-export const universityTypeChanged = createEvent<string>();
-export const accommodationTypeChanged = createEvent<string>();
-export const submitForm = createEvent<void>();
+export const fieldChanged = createEvent<{
+  field: keyof FormData;
+  value: string;
+}>();
 
-export const $formData = createStore<FormData>(initialFormData)
-  .on(countryChanged, (_state, country) => ({
-    country,
-    city: "",
-    universityType: "",
-    accommodationType: "",
-  }))
-  .on(cityChanged, (state, city) => ({
-    country: state.country,
-    city,
-    universityType: "",
-    accommodationType: "",
-  }))
-  .on(universityTypeChanged, (state, universityType) => ({
-    ...state,
-    universityType,
-  }))
-  .on(accommodationTypeChanged, (state, accommodationType) => ({
-    ...state,
-    accommodationType,
-  }));
+export const $formData = createStore<FormData>(initialFormData).on(
+  fieldChanged,
+  (state, { field, value }) => {
+    const newState = { ...state, [field]: value };
+
+    if (field === "country") {
+      newState.city = "";
+      newState.universityType = "";
+      newState.accommodationType = "";
+      newState.faculty = "";
+    } else if (field === "city") {
+      newState.universityType = "";
+      newState.accommodationType = "";
+      newState.faculty = "";
+    } else if (field === "universityType") {
+      newState.faculty = "";
+    }
+
+    return newState;
+  }
+);
+
+export const submitForm = createEvent<void>();
 
 submitForm.watch(() => {
   const formData = $formData.getState();
